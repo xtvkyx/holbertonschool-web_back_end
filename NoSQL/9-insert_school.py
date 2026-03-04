@@ -1,0 +1,8 @@
+#!/usr/bin/env python3
+"""Module that inserts a new document"""
+
+
+def insert_school(mongo_collection, **kwargs):
+    """Insert document and return inserted _id"""
+    result = mongo_collection.insert_one(kwargs)
+    return result.inserted_id
