@@ -6,11 +6,11 @@ const database = process.argv[2];
 function countStudents(path) {
   return fs.readFile(path, 'utf-8')
     .then((data) => {
-      const lines = data.split('\n').filter(line => line);
+      const lines = data.split('\n').filter((line) => line);
       const students = lines.slice(1);
 
       const fields = {};
-      students.forEach(line => {
+      students.forEach((line) => {
         const [firstname, , , field] = line.split(',');
 
         if (!fields[field]) fields[field] = [];
@@ -34,12 +34,8 @@ const app = http.createServer((req, res) => {
     res.write('This is the list of our students\n');
 
     countStudents(database)
-      .then(data => {
-        res.end(data);
-      })
-      .catch(() => {
-        res.end('Cannot load the database');
-      });
+      .then((data) => res.end(data))
+      .catch(() => res.end('Cannot load the database'));
   } else {
     res.end('Hello Holberton School!');
   }
