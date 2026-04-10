@@ -1,15 +1,14 @@
 import { readDatabase } from '../utils.js';
 
 export default class StudentsController {
-
   static getAllStudents(req, res) {
     readDatabase(process.argv[2])
-      .then(fields => {
+      .then((fields) => {
         let output = 'This is the list of our students\n';
 
         const sorted = Object.keys(fields).sort();
 
-        sorted.forEach(field => {
+        sorted.forEach((field) => {
           output += `Number of students in ${field}: ${fields[field].length}. List: ${fields[field].join(', ')}\n`;
         });
 
@@ -28,7 +27,7 @@ export default class StudentsController {
     }
 
     readDatabase(process.argv[2])
-      .then(fields => {
+      .then((fields) => {
         res.status(200).send(`List: ${fields[major].join(', ')}`);
       })
       .catch(() => {

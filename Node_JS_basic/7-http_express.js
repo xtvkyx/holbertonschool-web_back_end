@@ -31,12 +31,12 @@ function countStudents(path) {
 }
 
 app.get('/', (req, res) => {
-  res.type('text/plain');
-  res.send('Hello Holberton School!');
+  res.set('Content-Type', 'text/plain');
+  res.end('Hello Holberton School!');
 });
 
 app.get('/students', (req, res) => {
-  res.type('text/plain');
+  res.set('Content-Type', 'text/plain');
 
   res.write('This is the list of our students\n');
 

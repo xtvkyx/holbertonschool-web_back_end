@@ -18,6 +18,6 @@ export function readDatabase(path) {
       return fields;
     })
     .catch(() => {
-      return Promise.reject(new Error('Cannot load the database')); // 🔥 THIS FIXES CHECK 1
+      throw new Error('Cannot load the database'); // ✅ FIXED
     });
 }
