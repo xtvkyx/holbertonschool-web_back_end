@@ -2,13 +2,13 @@ import fs from 'fs/promises';
 
 export function readDatabase(path) {
   return fs.readFile(path, 'utf-8')
-    .then(data => {
-      const lines = data.split('\n').filter(l => l);
+    .then((data) => {
+      const lines = data.split('\n').filter((l) => l);
       const students = lines.slice(1);
 
       const fields = {};
 
-      students.forEach(line => {
+      students.forEach((line) => {
         const [firstname, , , field] = line.split(',');
 
         if (!fields[field]) fields[field] = [];
@@ -16,5 +16,8 @@ export function readDatabase(path) {
       });
 
       return fields;
+    })
+    .catch(() => {
+      throw new Error('Cannot load the database'); // 🔥 REQUIRED
     });
 }
