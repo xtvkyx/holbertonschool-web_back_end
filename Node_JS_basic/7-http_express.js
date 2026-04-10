@@ -1,33 +1,28 @@
 const express = require('express');
 const fs = require('fs');
 
+const app = express();
+
 function countStudents(path) {
   return new Promise((resolve, reject) => {
-    if (!path) {
-      reject(new Error('Cannot load the database'));
-      return;
-    }
+    if (!path) return reject(new Error('Cannot load the database'));
+
     fs.readFile(path, 'utf8', (err, data) => {
-      if (err) {
-        reject(new Error('Cannot load the database'));
-        return;
-      }
+      if (err) return reject(new Error('Cannot load the database'));
 
       const lines = data.split('\n').filter((line) => line.trim() !== '');
       const students = lines.slice(1);
 
       const fields = {};
-      students.forEach((student) => {
-        const parts = student.split(',');
-        const firstName = parts[0];
-        const field = parts[3];
+      students.forEach((line) => {
+        const [firstname, , , field] = line.split(',');
         if (!fields[field]) fields[field] = [];
-        fields[field].push(firstName);
+        fields[field].push(firstname);
       });
 
       let output = `Number of students: ${students.length}`;
-      for (const [field, names] of Object.entries(fields)) {
-        output += `\nNumber of students in ${field}: ${names.length}. List: ${names.join(', ')}`;
+      for (const field in fields) {
+        output += `\nNumber of students in ${field}: ${fields[field].length}. List: ${fields[field].join(', ')}`;
       }
 
       resolve(output);
@@ -35,23 +30,19 @@ function countStudents(path) {
   });
 }
 
-const app = express();
-
 app.get('/', (req, res) => {
   res.type('text/plain');
   res.send('Hello Holberton School!');
 });
 
 app.get('/students', (req, res) => {
-  const dbPath = process.argv[2];
   res.type('text/plain');
-  countStudents(dbPath)
-    .then((result) => {
-      res.send(`This is the list of our students\n${result}`);
-    })
-    .catch((err) => {
-      res.send(`This is the list of our students\n${err.message}`);
-    });
+
+  res.write('This is the list of our students\n');
+
+  countStudents(process.argv[2])
+    .then((data) => res.end(data))
+    .catch(() => res.end('Cannot load the database'));
 });
 
 app.listen(1245);
